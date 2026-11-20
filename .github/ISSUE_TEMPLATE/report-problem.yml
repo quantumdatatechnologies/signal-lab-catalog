@@ -1,0 +1,15 @@
+name: Report a dataset problem
+description: A broken link, wrong licence, outdated limits or other error in an entry
+labels: ["data-quality"]
+body:
+  - type: input
+    id: id
+    attributes: { label: Entry id (slug), description: "The `id` column in data/catalog.csv" }
+    validations: { required: true }
+  - type: textarea
+    id: problem
+    attributes: { label: What is wrong, and what is the correct information? }
+    validations: { required: true }
+  - type: input
+    id: evidence
+    attributes: { label: Link that shows the correct information }

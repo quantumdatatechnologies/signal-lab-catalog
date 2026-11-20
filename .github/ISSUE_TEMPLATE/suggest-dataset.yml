@@ -1,0 +1,23 @@
+name: Suggest a dataset
+description: Suggest a free or free-to-start data source for the catalog
+labels: ["suggestion"]
+body:
+  - type: input
+    id: name
+    attributes: { label: Name of the source }
+    validations: { required: true }
+  - type: input
+    id: url
+    attributes: { label: Provider or data URL }
+    validations: { required: true }
+  - type: input
+    id: licence
+    attributes: { label: Licence or terms link }
+  - type: dropdown
+    id: auth
+    attributes:
+      label: Sign-up needed
+      options: ["None", "Free key or account", "Not sure"]
+  - type: textarea
+    id: why
+    attributes: { label: What is it good for? }
