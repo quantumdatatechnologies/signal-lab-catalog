@@ -1,0 +1,12 @@
+{
+  "name": "signal-lab",
+  "version": "1.7.2",
+  "description": "Signal Lab: a growing catalog of free data sources, updated daily. Search and look up free APIs and datasets for finance, research and AI agents.",
+  "mcpServers": {
+    "signal-lab": {
+      "type": "http",
+      "url": "https://signal-lab.qdt.ai/api/mcp"
+    }
+  },
+  "contextFileName": "GEMINI.md"
+}
