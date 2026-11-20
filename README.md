@@ -28,6 +28,24 @@ The same server config is in [`.mcp.json`](.mcp.json) at the repo root (Open Plu
 
 Useful first calls: `list_filters` (valid filter values), `search_catalog`, `get_entry`, `compare_entries`, `export_catalog`, `whats_new`. See the [examples](examples/).
 
+## Add Signal Lab to your AI assistant
+
+Signal Lab is a growing catalog of free data sources, updated daily. The server needs no API key or sign-in. In every client below, use the endpoint `https://signal-lab.qdt.ai/api/mcp`.
+
+**Gemini CLI**: install the extension from this repo, then restart the CLI.
+
+```
+gemini extensions install https://github.com/quantumdatatechnologies/signal-lab-catalog
+```
+
+**Mistral Le Chat** ([docs](https://docs.mistral.ai/vibe/work/connectors/mcp-connectors)): adding a connector needs an administrator (on Free, Pro and Student plans the account owner is the administrator). Open `Connectors`, click `+ Add Connector`, switch to the `Custom MCP Connector` tab, enter a name without spaces (for example `signal-lab`) and the endpoint as the Server URL, then click `Connect`. Mistral detects that no authentication is needed.
+
+**Perplexity** ([docs](https://www.perplexity.ai/help-center/en/articles/13915507-adding-custom-remote-connectors)): custom remote connectors are limited to paid plans (Pro, Max and Enterprise). Open `Plugins` in the sidebar, choose `Add custom`, then `Add MCP connector`, then `Remote`. Enter a name and the endpoint as the MCP server URL. Under `Advanced`, set `Authentication` to `None` and `Transport` to `Streamable HTTP`.
+
+**Microsoft Copilot Studio** ([docs](https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent)): on your agent's `Tools` page, select `Add a tool`, then `New tool`, then `Model Context Protocol`. Fill in the server name, a short description and the endpoint as the Server URL, set authentication to `None`, and select `Create`.
+
+**Claude and Cursor**: see the setup steps above.
+
 ## Data
 
 `data/catalog.json` and `data/catalog.csv` are a snapshot of the catalog, regenerated every day by a GitHub Actions workflow that runs `scripts/refresh.py` against the public MCP server. Columns include `id`, `name`, `url`, `licence`, `licence_url`, `licence_note`, `auth`, `badge`, `category`, `domain`, `type`, `description`, `free_tier_limits`, `rate_limits`, `docs_url`, `signal_lab_url`, `tasks`, `last_verified` and `attribution`. The `meta` block in the JSON file records the source and generation time.
