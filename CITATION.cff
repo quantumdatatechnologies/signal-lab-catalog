@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+type: dataset
+title: "Signal Lab: free data sources for AI agents (catalog snapshot)"
+authors:
+  - name: "Quantum Data Technologies"
+date-released: 2026-11-20
+doi: 10.5281/zenodo.24401248
+url: "https://signal-lab.qdt.ai"
+repository-code: "https://github.com/quantumdatatechnologies/signal-lab-catalog"
+license: CC-BY-4.0
