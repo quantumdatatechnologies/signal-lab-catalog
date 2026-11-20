@@ -1,5 +1,7 @@
 # Signal Lab: open catalog and MCP examples
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24401248.svg)](https://doi.org/10.5281/zenodo.24401248)
+
 [Signal Lab](https://signal-lab.qdt.ai) is a growing catalog of free data sources, updated daily, built for AI agents first and people too. Each entry records what the source offers, what sign-up it needs, its licence (with the fine print read for you) and the result of a daily, polite reachability check.
 
 This repository holds the open part: a catalog snapshot you can download, the published scoring method, and small examples for calling the public MCP server. The live site is the source of truth.
@@ -45,3 +47,9 @@ Know a free source we are missing, or see something wrong? Open an issue or emai
 Code: [MIT](LICENSE). Data: [CC BY 4.0](LICENSE-DATA.md) with the per-entry caveat above.
 
 Information and education only. Not financial, investment, legal or tax advice. Free tiers, limits and licences belong to the data providers and can change; Signal Lab is not affiliated with or endorsed by any provider. Signal Lab is operated by Quantum Data Technologies Ltd.
+
+## How to cite
+
+Quantum Data Technologies (2026). *Signal Lab: free data sources for AI agents (catalog snapshot)*. Zenodo. https://doi.org/10.5281/zenodo.24401248
+
+This DOI always resolves to the latest version. A `CITATION.cff` file is included for reference managers and GitHub's "Cite this repository" button.
