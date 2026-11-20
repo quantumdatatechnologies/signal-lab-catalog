@@ -22,6 +22,8 @@ claude mcp add --transport http signal-lab https://signal-lab.qdt.ai/api/mcp
 
 **Other MCP clients**: point any client that supports streamable HTTP at the URL. No API key or header is needed.
 
+The same server config is in [`.mcp.json`](.mcp.json) at the repo root (Open Plugins layout), so plugin directories and clients that read it can set Signal Lab up from this repo.
+
 Useful first calls: `list_filters` (valid filter values), `search_catalog`, `get_entry`, `compare_entries`, `export_catalog`, `whats_new`. See the [examples](examples/).
 
 ## Data
