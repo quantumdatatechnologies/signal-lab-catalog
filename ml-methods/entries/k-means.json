@@ -1,0 +1,197 @@
+{
+  "schema_version": "1.1",
+  "id": "k-means",
+  "name": "k-means clustering",
+  "family": "Clustering",
+  "task_types": [
+    "clustering",
+    "segmentation"
+  ],
+  "summary": "Groups observations into k clusters by minimising distance to each cluster's centre.",
+  "inputs": "Numeric features (scaled) and a chosen k.",
+  "outputs": "Cluster label per row and cluster centres.",
+  "data_requirements": {
+    "data_types": [
+      "tabular"
+    ],
+    "min_observations": "Tens of rows per expected cluster",
+    "frequency": "Not time-aware",
+    "missing_values": "Impute first"
+  },
+  "assumptions": [
+    "Clusters are roughly spherical and similar in size",
+    "Euclidean distance is meaningful (scale features)",
+    "k is chosen in advance"
+  ],
+  "math_summary": "Minimises within-cluster sum of squared distances by alternating assignment of points to the nearest centroid and recomputing centroids (Lloyd's algorithm); converges to a local optimum.",
+  "when_to_use": [
+    "Fast segmentation of many items by numeric profiles",
+    "Grouping countries, firms or assets by characteristics"
+  ],
+  "when_not_to_use": [
+    "Elongated, nested or varying-density clusters (use GMM, DBSCAN/HDBSCAN)",
+    "Categorical data"
+  ],
+  "pitfalls": [
+    "Sensitive to initialisation (use k-means++ init, multiple restarts)",
+    "Outliers pull centroids"
+  ],
+  "compute": {
+    "complexity": "O(n k p) per iteration.",
+    "hardware": "CPU."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Grouping firms by financial-ratio profiles",
+      "sl_datasets": [
+        "simfin",
+        "sec-edgar-apis"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Clustering countries by development indicators",
+      "sl_datasets": [
+        "world-bank"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "k-means:paper-1",
+      "kind": "paper",
+      "title": "Lloyd (1982), Least squares quantization in PCM (IEEE Trans. Inf. Theory)",
+      "url": "https://doi.org/10.1109/TIT.1982.1056489",
+      "doi": "10.1109/TIT.1982.1056489",
+      "why": "The published form of the standard k-means iteration.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "k-means:implementation-1",
+      "kind": "implementation",
+      "title": "scikit-learn KMeans",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html",
+      "why": "Reference implementation with k-means++ initialisation; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "k-means:tutorial-1",
+      "kind": "tutorial",
+      "title": "scikit-learn user guide: Clustering (k-means section)",
+      "url": "https://scikit-learn.org/stable/modules/clustering.html",
+      "why": "Covers assumptions and when other clustering methods fit better.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "k-means:worked_example-1",
+      "kind": "worked_example",
+      "title": "Cluster countries by development indicators",
+      "url": "https://signal-lab.qdt.ai/datasets/world-bank",
+      "sl_dataset": "world-bank",
+      "domain": "research",
+      "steps": [
+        "Pick 10 to 20 World Development Indicators for one year",
+        "Standardise and impute sparingly",
+        "Choose k with silhouette scores",
+        "Describe clusters by their centres, not by labels"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1109/TIT.1982.1056489",
+        "openalex_id": "https://openalex.org/W2150593711",
+        "cited_by": 20420,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "scikit-learn/scikit-learn",
+        "last_push": "2026-11-24",
+        "stars": 68316,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 5,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=20420 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Well-defined objective with known convergence to a local optimum (Lloyd 1982)."
+    },
+    "ease": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "One call; choose k and scale features."
+    },
+    "fit": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Descriptive segmentation of firms or countries; financial clusters are rarely spherical or stable."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "partly_unverified",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

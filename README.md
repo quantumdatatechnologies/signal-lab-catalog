@@ -54,6 +54,10 @@ The same data is available live at [catalog.json](https://signal-lab.qdt.ai/cata
 
 **Licence caveat:** the catalog as a compilation is CC BY 4.0, but every listed source keeps its own licence and terms. Check the `licence` and `licence_note` for each entry and the provider's terms before reuse. See [LICENSE-DATA.md](LICENSE-DATA.md).
 
+## ML Methods Library
+
+[`ml-methods/`](ml-methods/) is a small, curated library of machine-learning and statistical methods for finance and research data: what each method is for, when not to use it, a few hand-checked materials, and scores that say whether code or a reviewer set them. See [ml-methods/README.md](ml-methods/README.md).
+
 ## Methodology
 
 Entries are checked once a day and given a measured score (v2) built only from measurements and reviewed licence and auth fields. Summary and link: [methodology/README.md](methodology/README.md).

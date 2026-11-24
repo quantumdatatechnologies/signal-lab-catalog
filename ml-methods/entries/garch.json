@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.1",
+  "id": "garch",
+  "name": "GARCH (and ARCH)",
+  "family": "Volatility models",
+  "task_types": [
+    "volatility forecasting",
+    "risk (VaR/ES)"
+  ],
+  "summary": "Models time-varying volatility: today's variance depends on recent shocks and recent variance.",
+  "inputs": "A return series (not prices), typically daily.",
+  "outputs": "Conditional volatility path, volatility forecasts, VaR and expected-shortfall inputs.",
+  "data_requirements": {
+    "data_types": [
+      "univariate time series (returns)"
+    ],
+    "min_observations": "About 500+ daily returns",
+    "frequency": "Daily or intraday",
+    "missing_values": "Drop non-trading days; do not fill returns"
+  },
+  "assumptions": [
+    "Returns have (near) zero conditional mean or a modelled mean",
+    "Volatility clusters: today's variance depends on past squared shocks and past variance",
+    "Chosen innovation distribution (normal, Student-t) is adequate"
+  ],
+  "math_summary": "sigma_t^2 = omega + sum alpha_i e_{t-i}^2 + sum beta_j sigma_{t-j}^2, with e_t = sigma_t z_t. ARCH (Engle) uses only past squared shocks; GARCH (Bollerslev) adds lagged conditional variance.",
+  "when_to_use": [
+    "Daily or intraday return series with volatility clustering",
+    "Value-at-risk and expected-shortfall estimates",
+    "Option-pricing inputs and risk budgeting"
+  ],
+  "when_not_to_use": [
+    "Levels or prices (model returns)",
+    "Very short samples",
+    "When leverage or asymmetry matters and you only fit symmetric GARCH (use EGARCH/GJR)"
+  ],
+  "pitfalls": [
+    "Persistence alpha+beta near 1 can signal structural breaks rather than true long memory",
+    "Normal innovations understate tail risk"
+  ],
+  "compute": {
+    "complexity": "Maximum likelihood, O(n) per likelihood evaluation.",
+    "hardware": "CPU, seconds per series."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Daily volatility and VaR for FX rates",
+      "sl_datasets": [
+        "ecb-data-portal",
+        "fred"
+      ]
+    },
+    {
+      "domain": "finance",
+      "use_case": "Volatility of wholesale electricity prices",
+      "sl_datasets": [
+        "nz-emi-wholesale-datasets",
+        "smard-electricity-market-data"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "garch:paper-1",
+      "kind": "paper",
+      "title": "Engle (1982), Autoregressive Conditional Heteroscedasticity (Econometrica)",
+      "url": "https://doi.org/10.2307/1912773",
+      "doi": "10.2307/1912773",
+      "why": "Introduced ARCH, the idea that variance itself can be modelled.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "garch:paper-2",
+      "kind": "paper",
+      "title": "Bollerslev (1986), Generalized autoregressive conditional heteroskedasticity",
+      "url": "https://doi.org/10.1016/0304-4076(86)90063-1",
+      "doi": "10.1016/0304-4076(86)90063-1",
+      "why": "Added lagged variance, giving the GARCH(1,1) workhorse used in practice.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "garch:implementation-1",
+      "kind": "implementation",
+      "title": "arch (Python) by Kevin Sheppard",
+      "url": "https://arch.readthedocs.io/en/latest/univariate/introduction.html",
+      "why": "The standard Python library for ARCH-family models; NCSA-style permissive licence.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "NCSA-style permissive (per repo LICENSE.md)"
+    },
+    {
+      "id": "garch:tutorial-1",
+      "kind": "tutorial",
+      "title": "arch documentation: ARCH Modeling",
+      "url": "https://arch.readthedocs.io/en/latest/univariate/univariate_volatility_modeling.html",
+      "why": "Worked notebook fitting GARCH, GJR and EGARCH with Student-t errors.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "garch:worked_example-1",
+      "kind": "worked_example",
+      "title": "Daily volatility and 99% VaR for EUR/USD",
+      "url": "https://signal-lab.qdt.ai/datasets/ecb-data-portal",
+      "sl_dataset": "ecb-data-portal",
+      "domain": "finance",
+      "steps": [
+        "Download ECB daily reference rates",
+        "Compute log returns in percent",
+        "Fit GARCH(1,1) with Student-t errors",
+        "Backtest VaR exceedances over the last two years"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.2307/1912773",
+        "openalex_id": "https://openalex.org/W1979575715",
+        "cited_by": 27835,
+        "checked": "2026-11-24"
+      },
+      {
+        "doi": "10.1016/0304-4076(86)90063-1",
+        "openalex_id": "https://openalex.org/W1999996900",
+        "cited_by": 29211,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "bashtage/arch",
+        "last_push": "2026-11-21",
+        "stars": 1696,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 5,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=29211 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=3 worst=3"
+    },
+    "theory": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Peer-reviewed foundations (Engle 1982, Bollerslev 1986) with known estimation theory and stationarity conditions."
+    },
+    "ease": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "One maintained library and a worked notebook; distribution and asymmetry choices matter."
+    },
+    "fit": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Central to volatility, VaR and risk work on returns."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "partly_unverified",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

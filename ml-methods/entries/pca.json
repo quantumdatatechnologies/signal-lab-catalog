@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.1",
+  "id": "pca",
+  "name": "Principal component analysis (PCA)",
+  "family": "Dimensionality reduction",
+  "task_types": [
+    "dimensionality reduction",
+    "factor extraction",
+    "denoising"
+  ],
+  "summary": "Finds a few uncorrelated directions that capture most of the variation in many correlated variables.",
+  "inputs": "Numeric matrix (rows = observations, columns = variables), usually standardised.",
+  "outputs": "Components (loadings), scores per observation and explained variance.",
+  "data_requirements": {
+    "data_types": [
+      "tabular",
+      "panel"
+    ],
+    "min_observations": "More rows than columns preferred",
+    "frequency": "Any",
+    "missing_values": "Impute or drop first"
+  },
+  "assumptions": [
+    "Linear structure; variance equals signal",
+    "Features standardised when on different scales"
+  ],
+  "math_summary": "Finds orthogonal directions of maximal variance: eigenvectors of the covariance matrix (or right singular vectors of the centred data matrix X = U S V').",
+  "when_to_use": [
+    "Extracting a few factors from many correlated series (yield-curve level, slope, curvature)",
+    "Reducing dimensionality before regression or clustering"
+  ],
+  "when_not_to_use": [
+    "Non-linear manifolds",
+    "When components must be interpretable as named drivers"
+  ],
+  "pitfalls": [
+    "Unstandardised inputs let one variable dominate",
+    "Look-ahead if fitted on the full sample before backtesting"
+  ],
+  "compute": {
+    "complexity": "O(min(n p^2, n^2 p)) via SVD; randomised SVD for large data.",
+    "hardware": "CPU."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Yield-curve factors from government bond yields across maturities",
+      "sl_datasets": [
+        "japan-mof-jgb-interest-rates",
+        "fred"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Composite indices from many country indicators",
+      "sl_datasets": [
+        "world-bank"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "pca:paper-1",
+      "kind": "paper",
+      "title": "Pearson (1901), On lines and planes of closest fit to systems of points in space",
+      "url": "https://doi.org/10.1080/14786440109462720",
+      "doi": "10.1080/14786440109462720",
+      "why": "The geometric origin of PCA.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "pca:paper-2",
+      "kind": "paper",
+      "title": "Hotelling (1933), Analysis of a complex of statistical variables into principal components",
+      "url": "https://doi.org/10.1037/h0071325",
+      "doi": "10.1037/h0071325",
+      "why": "The statistical formulation and the name.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "pca:implementation-1",
+      "kind": "implementation",
+      "title": "scikit-learn PCA",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html",
+      "why": "Reference implementation with randomised SVD; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "pca:tutorial-1",
+      "kind": "tutorial",
+      "title": "scikit-learn user guide: Decomposing signals in components",
+      "url": "https://scikit-learn.org/stable/modules/decomposition.html",
+      "why": "Explains PCA and its variants with examples.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "pca:worked_example-1",
+      "kind": "worked_example",
+      "title": "Level, slope and curvature factors of the JGB yield curve",
+      "url": "https://signal-lab.qdt.ai/datasets/japan-mof-jgb-interest-rates",
+      "sl_dataset": "japan-mof-jgb-interest-rates",
+      "domain": "finance",
+      "steps": [
+        "Pull daily yields across maturities",
+        "Use daily changes, standardised",
+        "Fit PCA on a training window only",
+        "Read the first three loadings as level, slope, curvature"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1080/14786440109462720",
+        "openalex_id": "https://openalex.org/W2294798173",
+        "cited_by": 17682,
+        "checked": "2026-11-24"
+      },
+      {
+        "doi": "10.1037/h0071325",
+        "openalex_id": "https://openalex.org/W2071128523",
+        "cited_by": 12107,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "scikit-learn/scikit-learn",
+        "last_push": "2026-11-24",
+        "stars": 68316,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 4,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=17682 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Exact linear-algebra optimality (Pearson 1901, Hotelling 1933)."
+    },
+    "ease": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "One call; few choices beyond scaling and the number of components."
+    },
+    "fit": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Classic for yield-curve factors and composite indices; fit on a training window to avoid look-ahead."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

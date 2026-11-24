@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.1",
+  "id": "bsts",
+  "name": "Bayesian structural time series (BSTS)",
+  "family": "State-space / Bayesian",
+  "task_types": [
+    "nowcasting",
+    "forecasting",
+    "causal impact"
+  ],
+  "summary": "A Bayesian state-space model with trend, seasonality and automatic regressor selection; also used to estimate event effects.",
+  "inputs": "Target series, optional many candidate regressors (or control series for causal impact).",
+  "outputs": "Posterior forecasts with intervals; inclusion probabilities of regressors; estimated intervention effect.",
+  "data_requirements": {
+    "data_types": [
+      "univariate time series with covariates"
+    ],
+    "min_observations": "Enough pre-period history to learn the relationship",
+    "frequency": "Regular",
+    "missing_values": "Tolerated in the response"
+  },
+  "assumptions": [
+    "Series decomposes into state components (trend, seasonality, regression)",
+    "For causal impact: control series are unaffected by the intervention and the relationship is stable"
+  ],
+  "math_summary": "A structural state-space model with trend, seasonal and regression components; spike-and-slab priors select among many candidate regressors, and MCMC gives a posterior predictive distribution.",
+  "when_to_use": [
+    "Nowcasting with many candidate predictors",
+    "Estimating the effect of an event or policy on a series when no randomised control exists"
+  ],
+  "when_not_to_use": [
+    "Controls affected by the intervention",
+    "When fast frequentist baselines suffice"
+  ],
+  "pitfalls": [
+    "Causal claims rest on untestable assumptions about controls",
+    "Check the license for the R bsts package before bundling"
+  ],
+  "compute": {
+    "complexity": "MCMC, roughly O(iterations * n * state_dim^2).",
+    "hardware": "CPU; minutes for typical series."
+  },
+  "applicability": [
+    {
+      "domain": "research",
+      "use_case": "Estimated effect of a policy change on regional electricity consumption",
+      "sl_datasets": [
+        "smard-electricity-market-data",
+        "energy-charts-api"
+      ]
+    },
+    {
+      "domain": "finance",
+      "use_case": "Nowcasting a quarterly macro series from monthly indicators",
+      "sl_datasets": [
+        "fred",
+        "bls-public-data"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "bsts:paper-1",
+      "kind": "paper",
+      "title": "Scott & Varian (2014), Predicting the present with Bayesian structural time series",
+      "url": "https://doi.org/10.1504/IJMMNO.2014.059942",
+      "doi": "10.1504/IJMMNO.2014.059942",
+      "why": "Introduces BSTS with spike-and-slab regressor selection for nowcasting.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "bsts:paper-2",
+      "kind": "paper",
+      "title": "Brodersen et al. (2015), Inferring causal impact using Bayesian structural time-series models",
+      "url": "https://doi.org/10.1214/14-AOAS788",
+      "doi": "10.1214/14-AOAS788",
+      "why": "Extends BSTS to estimating the effect of an intervention.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "bsts:implementation-1",
+      "kind": "implementation",
+      "title": "CausalImpact (R)",
+      "url": "https://google.github.io/CausalImpact/",
+      "why": "Maintained package for BSTS-based effect estimation; Apache-2.0.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "bsts:tutorial-1",
+      "kind": "tutorial",
+      "title": "CausalImpact vignette",
+      "url": "https://google.github.io/CausalImpact/CausalImpact.html",
+      "why": "Step-by-step guide including the assumptions to check.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "bsts:worked_example-1",
+      "kind": "worked_example",
+      "title": "Estimate the effect of a policy change on German electricity load",
+      "url": "https://signal-lab.qdt.ai/datasets/smard-electricity-market-data",
+      "sl_dataset": "smard-electricity-market-data",
+      "domain": "research",
+      "steps": [
+        "Choose a dated policy change",
+        "Use unaffected series as controls",
+        "Fit CausalImpact on the pre-period",
+        "Report the effect with intervals and state the control assumption"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1504/IJMMNO.2014.059942",
+        "openalex_id": "https://openalex.org/W2114463818",
+        "cited_by": 522,
+        "checked": "2026-11-24"
+      },
+      {
+        "doi": "10.1214/14-AOAS788",
+        "openalex_id": "https://openalex.org/W2078639378",
+        "cited_by": 1241,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "google/CausalImpact",
+        "last_push": "2026-03-31",
+        "stars": 1868,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 3,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=1241 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 4,
+      "method": "code",
+      "inputs": "days since last push: best=238 worst=238"
+    },
+    "theory": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Coherent Bayesian state-space model; causal-impact use rests on untestable assumptions about controls."
+    },
+    "ease": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "R-centric tooling and MCMC; checking the control assumption takes thought."
+    },
+    "fit": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Good for nowcasting with many predictors and event studies on macro and energy series."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

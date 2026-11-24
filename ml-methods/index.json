@@ -1,0 +1,469 @@
+{
+  "schema_version": "1.1",
+  "generated": "2026-11-24",
+  "licence": "CC-BY-4.0",
+  "methods": [
+    {
+      "id": "arima-sarima",
+      "name": "ARIMA / SARIMA",
+      "family": "Classical time series",
+      "task_types": [
+        "univariate forecasting"
+      ],
+      "summary": "Models a single time series from its own past values and past forecast errors, with optional seasonal terms.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "bls-public-data",
+        "fred",
+        "us-treasury-fiscal-data"
+      ],
+      "scores": {
+        "theory": 5,
+        "evidence": 3,
+        "maturity": null,
+        "ease": 4,
+        "fit": 4,
+        "freshness": 5
+      },
+      "claim_check": "skipped_no_abstract",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/arima-sarima.json"
+    },
+    {
+      "id": "bsts",
+      "name": "Bayesian structural time series (BSTS)",
+      "family": "State-space / Bayesian",
+      "task_types": [
+        "nowcasting",
+        "forecasting",
+        "causal impact"
+      ],
+      "summary": "A Bayesian state-space model with trend, seasonality and automatic regressor selection; also used to estimate event effects.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "bls-public-data",
+        "energy-charts-api",
+        "fred",
+        "smard-electricity-market-data"
+      ],
+      "scores": {
+        "theory": 4,
+        "evidence": 4,
+        "maturity": 3,
+        "ease": 3,
+        "fit": 4,
+        "freshness": 4
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/bsts.json"
+    },
+    {
+      "id": "conformal-prediction",
+      "name": "Conformal prediction",
+      "family": "Uncertainty quantification (distribution-free)",
+      "task_types": [
+        "prediction intervals",
+        "prediction sets"
+      ],
+      "summary": "Wraps any model to produce prediction intervals or sets with a stated coverage guarantee.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "fred",
+        "nz-emi-wholesale-datasets",
+        "us-treasury-fiscal-data"
+      ],
+      "scores": {
+        "theory": 5,
+        "evidence": 4,
+        "maturity": 3,
+        "ease": 4,
+        "fit": 3,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/conformal-prediction.json"
+    },
+    {
+      "id": "garch",
+      "name": "GARCH (and ARCH)",
+      "family": "Volatility models",
+      "task_types": [
+        "volatility forecasting",
+        "risk (VaR/ES)"
+      ],
+      "summary": "Models time-varying volatility: today's variance depends on recent shocks and recent variance.",
+      "domains": [
+        "finance"
+      ],
+      "sl_datasets": [
+        "ecb-data-portal",
+        "fred",
+        "nz-emi-wholesale-datasets",
+        "smard-electricity-market-data"
+      ],
+      "scores": {
+        "theory": 5,
+        "evidence": 4,
+        "maturity": 5,
+        "ease": 4,
+        "fit": 5,
+        "freshness": 5
+      },
+      "claim_check": "partly_unverified",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/garch.json"
+    },
+    {
+      "id": "gradient-boosting",
+      "name": "Gradient boosting (GBM)",
+      "family": "Ensemble / boosted trees",
+      "task_types": [
+        "regression",
+        "classification",
+        "ranking"
+      ],
+      "summary": "Builds a strong predictor by adding small decision trees one at a time, each correcting the errors of the ones before.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "bls-public-data",
+        "fred",
+        "sec-edgar-apis",
+        "simfin"
+      ],
+      "scores": {
+        "theory": 4,
+        "evidence": 5,
+        "maturity": 5,
+        "ease": 4,
+        "fit": 5,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/gradient-boosting.json"
+    },
+    {
+      "id": "hmm-regime-switching",
+      "name": "Hidden Markov / Markov regime-switching models",
+      "family": "Latent-state time series",
+      "task_types": [
+        "regime detection",
+        "forecasting",
+        "nowcasting"
+      ],
+      "summary": "Assumes the data switch between a few hidden regimes (e.g. expansion and recession) and estimates when.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "bls-public-data",
+        "fred",
+        "world-bank-pink-sheet"
+      ],
+      "scores": {
+        "theory": 5,
+        "evidence": 4,
+        "maturity": 4,
+        "ease": 3,
+        "fit": 5,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/hmm-regime-switching.json"
+    },
+    {
+      "id": "isolation-forest",
+      "name": "Isolation forest",
+      "family": "Anomaly detection",
+      "task_types": [
+        "unsupervised anomaly detection"
+      ],
+      "summary": "Flags anomalies as points that random splits isolate quickly; fast and unsupervised.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "sec-edgar-apis",
+        "us-treasury-fiscal-data",
+        "world-bank"
+      ],
+      "scores": {
+        "theory": 3,
+        "evidence": 4,
+        "maturity": 4,
+        "ease": 5,
+        "fit": 3,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/isolation-forest.json"
+    },
+    {
+      "id": "k-means",
+      "name": "k-means clustering",
+      "family": "Clustering",
+      "task_types": [
+        "clustering",
+        "segmentation"
+      ],
+      "summary": "Groups observations into k clusters by minimising distance to each cluster's centre.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "sec-edgar-apis",
+        "simfin",
+        "world-bank"
+      ],
+      "scores": {
+        "theory": 4,
+        "evidence": 4,
+        "maturity": 5,
+        "ease": 5,
+        "fit": 3,
+        "freshness": 5
+      },
+      "claim_check": "partly_unverified",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/k-means.json"
+    },
+    {
+      "id": "kalman-filter",
+      "name": "Kalman filter / state-space models",
+      "family": "State-space / Bayesian filtering",
+      "task_types": [
+        "filtering",
+        "smoothing",
+        "forecasting",
+        "missing data"
+      ],
+      "summary": "Recursively estimates a hidden state (trend, level, time-varying coefficient) from noisy observations.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "bls-public-data",
+        "fred",
+        "world-bank",
+        "world-bank-pink-sheet"
+      ],
+      "scores": {
+        "theory": 5,
+        "evidence": 4,
+        "maturity": 5,
+        "ease": 3,
+        "fit": 4,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/kalman-filter.json"
+    },
+    {
+      "id": "lstm",
+      "name": "LSTM (long short-term memory)",
+      "family": "Recurrent neural networks",
+      "task_types": [
+        "sequence modelling",
+        "forecasting",
+        "classification"
+      ],
+      "summary": "A recurrent neural network with gated memory that can learn long-range patterns in sequences.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "energy-charts-api",
+        "imf-portwatch",
+        "smard-electricity-market-data"
+      ],
+      "scores": {
+        "theory": 3,
+        "evidence": 4,
+        "maturity": 5,
+        "ease": 2,
+        "fit": 2,
+        "freshness": 5
+      },
+      "claim_check": "partly_unverified",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/lstm.json"
+    },
+    {
+      "id": "pca",
+      "name": "Principal component analysis (PCA)",
+      "family": "Dimensionality reduction",
+      "task_types": [
+        "dimensionality reduction",
+        "factor extraction",
+        "denoising"
+      ],
+      "summary": "Finds a few uncorrelated directions that capture most of the variation in many correlated variables.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "fred",
+        "japan-mof-jgb-interest-rates",
+        "world-bank"
+      ],
+      "scores": {
+        "theory": 5,
+        "evidence": 4,
+        "maturity": 4,
+        "ease": 5,
+        "fit": 4,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/pca.json"
+    },
+    {
+      "id": "prophet",
+      "name": "Prophet",
+      "family": "Decomposable additive forecasting",
+      "task_types": [
+        "univariate forecasting",
+        "business time series"
+      ],
+      "summary": "An additive forecasting model (trend + seasonality + holidays) designed for quick, tunable business forecasts.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "energy-charts-api",
+        "smard-electricity-market-data",
+        "us-treasury-fiscal-data"
+      ],
+      "scores": {
+        "theory": 2,
+        "evidence": 4,
+        "maturity": 3,
+        "ease": 5,
+        "fit": 2,
+        "freshness": 5
+      },
+      "claim_check": "partly_unverified",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/prophet.json"
+    },
+    {
+      "id": "random-forest",
+      "name": "Random forest",
+      "family": "Ensemble / bagged trees",
+      "task_types": [
+        "regression",
+        "classification",
+        "feature importance"
+      ],
+      "summary": "Averages many decorrelated decision trees trained on bootstrap samples; a robust, low-tuning baseline.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "energy-charts-api",
+        "fred",
+        "japan-mof-jgb-interest-rates",
+        "smard-electricity-market-data"
+      ],
+      "scores": {
+        "theory": 4,
+        "evidence": 3,
+        "maturity": 5,
+        "ease": 5,
+        "fit": 4,
+        "freshness": 5
+      },
+      "claim_check": "skipped_no_abstract",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/random-forest.json"
+    },
+    {
+      "id": "temporal-fusion-transformer",
+      "name": "Temporal Fusion Transformer (TFT)",
+      "family": "Attention-based deep forecasting",
+      "task_types": [
+        "multi-horizon forecasting",
+        "quantile forecasting"
+      ],
+      "summary": "An attention-based deep model for multi-horizon forecasting with quantile outputs and built-in interpretability.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "fred",
+        "nz-emi-wholesale-datasets",
+        "smard-electricity-market-data"
+      ],
+      "scores": {
+        "theory": 3,
+        "evidence": 5,
+        "maturity": 4,
+        "ease": 2,
+        "fit": 3,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/temporal-fusion-transformer.json"
+    },
+    {
+      "id": "xgboost",
+      "name": "XGBoost",
+      "family": "Ensemble / boosted trees",
+      "task_types": [
+        "regression",
+        "classification",
+        "ranking"
+      ],
+      "summary": "A regularised, highly optimised gradient-boosted tree library and algorithm for large tabular problems.",
+      "domains": [
+        "finance",
+        "research"
+      ],
+      "sl_datasets": [
+        "fred",
+        "sec-edgar-apis",
+        "simfin",
+        "world-bank-pink-sheet"
+      ],
+      "scores": {
+        "theory": 4,
+        "evidence": 4,
+        "maturity": 5,
+        "ease": 3,
+        "fit": 5,
+        "freshness": 5
+      },
+      "claim_check": "consistent",
+      "updated": "2026-11-24",
+      "path": "ml-methods/entries/xgboost.json"
+    }
+  ]
+}

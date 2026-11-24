@@ -1,0 +1,225 @@
+{
+  "schema_version": "1.1",
+  "id": "gradient-boosting",
+  "name": "Gradient boosting (GBM)",
+  "family": "Ensemble / boosted trees",
+  "task_types": [
+    "regression",
+    "classification",
+    "ranking"
+  ],
+  "summary": "Builds a strong predictor by adding small decision trees one at a time, each correcting the errors of the ones before.",
+  "inputs": "Tabular feature matrix (numeric; categoricals encoded or native in histogram variants) and a target.",
+  "outputs": "Point predictions (regression) or class probabilities (classification); feature importances.",
+  "data_requirements": {
+    "data_types": [
+      "tabular"
+    ],
+    "min_observations": "Hundreds of rows; thousands preferred",
+    "frequency": "Any; for time series build lag features and use walk-forward splits",
+    "missing_values": "Handled natively by histogram-based implementations"
+  },
+  "assumptions": [
+    "Rows are exchangeable (i.i.d.) unless you build time-aware features and splits",
+    "Signal is learnable from tabular features; no built-in notion of time or sequence"
+  ],
+  "math_summary": "Fits an additive model F(x)=sum_m nu*h_m(x) stage by stage; each new weak learner h_m (usually a small tree) is fitted to the negative gradient of the loss at the current fit, i.e. functional gradient descent.",
+  "when_to_use": [
+    "Tabular data with mixed numeric and categorical features",
+    "Non-linear interactions you do not want to hand-specify",
+    "Strong baseline before trying deep models"
+  ],
+  "when_not_to_use": [
+    "Very small samples where a linear model is easier to defend",
+    "Pure sequence or text inputs without engineered features",
+    "When you need calibrated probabilities without post-hoc calibration"
+  ],
+  "pitfalls": [
+    "Leakage from random K-fold on time series: use walk-forward splits",
+    "Overfitting with deep trees and many rounds: use early stopping on a time-ordered validation set"
+  ],
+  "compute": {
+    "complexity": "Training roughly O(n_trees * n * depth) with histogram binning; CPU-friendly, parallel across features. Inference is fast.",
+    "hardware": "CPU is enough for millions of rows; no GPU needed."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Credit or default-risk scoring from firm fundamentals",
+      "sl_datasets": [
+        "sec-edgar-apis",
+        "simfin"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Nowcasting a macro series from many monthly indicators (with time-ordered splits)",
+      "sl_datasets": [
+        "fred",
+        "bls-public-data"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "gradient-boosting:paper-1",
+      "kind": "paper",
+      "title": "Friedman (2001), Greedy function approximation: A gradient boosting machine",
+      "url": "https://doi.org/10.1214/aos/1013203451",
+      "doi": "10.1214/aos/1013203451",
+      "why": "The original paper that frames boosting as gradient descent in function space.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "gradient-boosting:implementation-1",
+      "kind": "implementation",
+      "title": "scikit-learn HistGradientBoostingRegressor",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html",
+      "why": "Fast, well-documented reference implementation with native missing-value support; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "gradient-boosting:implementation-2",
+      "kind": "implementation",
+      "title": "LightGBM",
+      "url": "https://lightgbm.readthedocs.io/en/stable/",
+      "why": "Widely used production-grade gradient boosting library for large tabular data; MIT.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "gradient-boosting:tutorial-1",
+      "kind": "tutorial",
+      "title": "scikit-learn user guide: Ensembles (gradient boosting section)",
+      "url": "https://scikit-learn.org/stable/modules/ensemble.html",
+      "why": "Clear explanation of the loss, shrinkage and early stopping with runnable examples.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "gradient-boosting:worked_example-1",
+      "kind": "worked_example",
+      "title": "Nowcast a monthly US labour indicator from other monthly series",
+      "url": "https://signal-lab.qdt.ai/datasets/fred",
+      "sl_dataset": "fred",
+      "domain": "research",
+      "steps": [
+        "Pull 20 to 50 monthly FRED series and the target series",
+        "Build lagged features only from data available at each month",
+        "Train with walk-forward splits and early stopping",
+        "Compare with a seasonal-naive and an ARIMA baseline"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [
+    {
+      "note": "The M5 forecasting competition results paper discusses the strong showing of tree-based gradient-boosting methods (LightGBM) among top entries; read the paper for exact rankings.",
+      "source_url": "https://doi.org/10.1016/j.ijforecast.2021.11.013"
+    }
+  ],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1214/aos/1013203451",
+        "openalex_id": "https://openalex.org/W1678356000",
+        "cited_by": 40279,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "scikit-learn/scikit-learn",
+        "last_push": "2026-11-24",
+        "stars": 68316,
+        "archived": false,
+        "checked": "2026-11-24"
+      },
+      {
+        "repo": "lightgbm-org/LightGBM",
+        "last_push": "2026-11-23",
+        "stars": 19008,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": true
+  },
+  "scores": {
+    "evidence": {
+      "value": 5,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=true open_abstract=true"
+    },
+    "maturity": {
+      "value": 5,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=40279 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=1"
+    },
+    "theory": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Rigorous framing as functional gradient descent (Friedman 2001), but no simple guarantees or inference for the fitted model."
+    },
+    "ease": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Mature CPU libraries with good defaults; leakage-safe time splits and early stopping still need care."
+    },
+    "fit": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Strong default for tabular finance and macro features; the cited M5 results paper discusses boosted trees' showing."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

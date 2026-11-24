@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.1",
+  "id": "lstm",
+  "name": "LSTM (long short-term memory)",
+  "family": "Recurrent neural networks",
+  "task_types": [
+    "sequence modelling",
+    "forecasting",
+    "classification"
+  ],
+  "summary": "A recurrent neural network with gated memory that can learn long-range patterns in sequences.",
+  "inputs": "Sequences (windows) of one or more variables; optional exogenous inputs.",
+  "outputs": "Next-step or multi-step predictions, or sequence classifications.",
+  "data_requirements": {
+    "data_types": [
+      "sequences",
+      "multivariate time series"
+    ],
+    "min_observations": "Many thousands of windows or many related series",
+    "frequency": "Regular",
+    "missing_values": "Impute or mask before training"
+  },
+  "assumptions": [
+    "Enough training sequences to fit many parameters",
+    "Stationary-enough relationships or regular retraining"
+  ],
+  "math_summary": "A recurrent cell with an internal memory state controlled by gates (input, output and, in later variants, forget); the additive memory path lets error flow over long time lags without vanishing.",
+  "when_to_use": [
+    "Many related sequences or long histories",
+    "Non-linear temporal patterns with exogenous inputs"
+  ],
+  "when_not_to_use": [
+    "Short, single financial series (high overfitting risk; strong classical baselines)",
+    "When interpretability is required"
+  ],
+  "pitfalls": [
+    "Look-ahead leakage in scaling and windowing",
+    "Comparing only to naive baselines instead of ARIMA/ETS/boosting"
+  ],
+  "compute": {
+    "complexity": "O(T * h^2) per sequence for hidden size h; sequential over time.",
+    "hardware": "Small models train on CPU; GPU helpful for large data."
+  },
+  "applicability": [
+    {
+      "domain": "research",
+      "use_case": "Hourly electricity load forecasting with weather covariates",
+      "sl_datasets": [
+        "energy-charts-api",
+        "smard-electricity-market-data"
+      ]
+    },
+    {
+      "domain": "finance",
+      "use_case": "Sequence models of trade flows or shipping activity",
+      "sl_datasets": [
+        "imf-portwatch"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "lstm:paper-1",
+      "kind": "paper",
+      "title": "Hochreiter & Schmidhuber (1997), Long Short-Term Memory (Neural Computation)",
+      "url": "https://doi.org/10.1162/neco.1997.9.8.1735",
+      "doi": "10.1162/neco.1997.9.8.1735",
+      "why": "The original LSTM paper and its argument about vanishing gradients.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "lstm:implementation-1",
+      "kind": "implementation",
+      "title": "PyTorch torch.nn.LSTM",
+      "url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html",
+      "why": "Canonical, maintained layer implementation; BSD-style.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-style (PyTorch)"
+    },
+    {
+      "id": "lstm:tutorial-1",
+      "kind": "tutorial",
+      "title": "Understanding LSTM Networks (colah's blog)",
+      "url": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/",
+      "why": "The clearest free visual explanation of the gates.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "lstm:worked_example-1",
+      "kind": "worked_example",
+      "title": "Hourly German electricity load forecasting",
+      "url": "https://signal-lab.qdt.ai/datasets/energy-charts-api",
+      "sl_dataset": "energy-charts-api",
+      "domain": "research",
+      "steps": [
+        "Pull hourly load and generation (CC BY 4.0)",
+        "Build 7-day input windows, 24-hour targets",
+        "Train a small LSTM on CPU",
+        "Compare with seasonal-naive and gradient boosting on lag features"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1162/neco.1997.9.8.1735",
+        "openalex_id": "https://openalex.org/W2064675550",
+        "cited_by": 135056,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "pytorch/pytorch",
+        "last_push": "2026-11-24",
+        "stars": 105684,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 5,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=135056 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Sound motivation for gradient flow (Hochreiter and Schmidhuber 1997) but no statistical guarantees; behaviour on small noisy series is not well characterised."
+    },
+    "ease": {
+      "value": 2,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Needs windowing, scaling without leakage, architecture and training choices; GPU helps at scale."
+    },
+    "fit": {
+      "value": 2,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Single financial series are short and noisy; the entry cites no finance benchmark showing gains over classical baselines."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "partly_unverified",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

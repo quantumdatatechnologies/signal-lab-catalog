@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.1",
+  "id": "temporal-fusion-transformer",
+  "name": "Temporal Fusion Transformer (TFT)",
+  "family": "Attention-based deep forecasting",
+  "task_types": [
+    "multi-horizon forecasting",
+    "quantile forecasting"
+  ],
+  "summary": "An attention-based deep model for multi-horizon forecasting with quantile outputs and built-in interpretability.",
+  "inputs": "A panel of related series with static covariates, known-future inputs and observed inputs.",
+  "outputs": "Quantile forecasts over several horizons; variable-importance and attention weights.",
+  "data_requirements": {
+    "data_types": [
+      "panel time series"
+    ],
+    "min_observations": "Many series or long histories; small data overfits",
+    "frequency": "Regular",
+    "missing_values": "Impute; mark with indicators"
+  },
+  "assumptions": [
+    "Many related series (a panel) with static, known-future and observed inputs",
+    "Enough data to train an attention model"
+  ],
+  "math_summary": "Combines recurrent layers for local processing with interpretable multi-head self-attention for long-range dependencies, gating and variable-selection networks, and outputs quantiles via a quantile loss.",
+  "when_to_use": [
+    "Panels of related series with known future inputs (calendars, schedules)",
+    "When you need quantile forecasts and some interpretability (variable importance, attention)"
+  ],
+  "when_not_to_use": [
+    "Single short series",
+    "Tight compute budgets; tree models with lag features are cheaper strong baselines"
+  ],
+  "pitfalls": [
+    "Heavy hyperparameter sensitivity",
+    "Attention weights are not causal explanations"
+  ],
+  "compute": {
+    "complexity": "O(T^2) attention over the lookback window plus recurrent layers.",
+    "hardware": "GPU recommended for training at scale; small configs on CPU are slow but possible."
+  },
+  "applicability": [
+    {
+      "domain": "research",
+      "use_case": "Day-ahead electricity load and price quantiles across regions",
+      "sl_datasets": [
+        "smard-electricity-market-data",
+        "nz-emi-wholesale-datasets"
+      ]
+    },
+    {
+      "domain": "finance",
+      "use_case": "Multi-horizon realised-volatility forecasting (the paper includes a volatility dataset)",
+      "sl_datasets": [
+        "fred"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "temporal-fusion-transformer:paper-1",
+      "kind": "paper",
+      "title": "Lim, Arik, Loeff & Pfister (2021), Temporal Fusion Transformers (IJF)",
+      "url": "https://doi.org/10.1016/j.ijforecast.2021.03.012",
+      "doi": "10.1016/j.ijforecast.2021.03.012",
+      "why": "Peer-reviewed version of the architecture and its evaluation.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "temporal-fusion-transformer:implementation-1",
+      "kind": "implementation",
+      "title": "pytorch-forecasting TemporalFusionTransformer",
+      "url": "https://pytorch-forecasting.readthedocs.io/en/stable/api/pytorch_forecasting.models.temporal_fusion_transformer.TemporalFusionTransformer.html",
+      "why": "Most used maintained implementation; MIT.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "MIT"
+    },
+    {
+      "id": "temporal-fusion-transformer:implementation-2",
+      "kind": "implementation",
+      "title": "Original code (google-research/tft)",
+      "url": "https://github.com/google-research/google-research/tree/master/tft",
+      "why": "Authors' reference code with the paper's volatility, electricity, traffic and retail experiments; Apache-2.0.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "temporal-fusion-transformer:tutorial-1",
+      "kind": "tutorial",
+      "title": "pytorch-forecasting: Demand forecasting with the TFT",
+      "url": "https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html",
+      "why": "End-to-end tutorial from data setup to interpretation.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "temporal-fusion-transformer:worked_example-1",
+      "kind": "worked_example",
+      "title": "Day-ahead electricity price quantiles across New Zealand nodes",
+      "url": "https://signal-lab.qdt.ai/datasets/nz-emi-wholesale-datasets",
+      "sl_dataset": "nz-emi-wholesale-datasets",
+      "domain": "research",
+      "steps": [
+        "Build a panel of node prices (CC BY 4.0)",
+        "Add calendar features as known-future inputs",
+        "Train TFT for 48 half-hour horizons",
+        "Check quantile coverage against a quantile gradient-boosting baseline"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [
+    {
+      "note": "The paper evaluates on electricity, traffic, retail and financial volatility datasets; see the paper for numbers.",
+      "source_url": "https://github.com/google-research/google-research/tree/master/tft"
+    }
+  ],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1016/j.ijforecast.2021.03.012",
+        "openalex_id": "https://openalex.org/W2996331899",
+        "cited_by": 5237,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "sktime/pytorch-forecasting",
+        "last_push": "2026-11-23",
+        "stars": 5011,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": true
+  },
+  "scores": {
+    "evidence": {
+      "value": 5,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=true open_abstract=true"
+    },
+    "maturity": {
+      "value": 4,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=5237 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=1 worst=1"
+    },
+    "theory": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Peer-reviewed architecture (IJF 2021) validated empirically; no theoretical guarantees."
+    },
+    "ease": {
+      "value": 2,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Heavy hyperparameter sensitivity and data setup; GPU recommended."
+    },
+    "fit": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Fits panels with known future inputs such as electricity; the paper includes a volatility dataset, but single finance series are a poor match."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}
