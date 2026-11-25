@@ -1,0 +1,524 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/quantumdatatechnologies/signal-lab-catalog/blob/main/ml-methods/schema.json",
+  "title": "Signal Lab ML Methods Library entry",
+  "description": "One curated ML or statistical method: Signal Lab's own summary, applicability to finance and research data, a small hand-checked set of materials, verification status with dates, and scores with their method (computed by code or set by a named reviewer with a rationale). Licensed CC BY 4.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "family",
+    "task_types",
+    "summary",
+    "inputs",
+    "outputs",
+    "data_requirements",
+    "assumptions",
+    "math_summary",
+    "when_to_use",
+    "when_not_to_use",
+    "pitfalls",
+    "compute",
+    "applicability",
+    "materials",
+    "benchmark_notes",
+    "facts",
+    "scores",
+    "verification",
+    "license",
+    "updated"
+  ],
+  "definitions": {
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 3
+    },
+    "textList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/text"
+      }
+    },
+    "codeScore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "method"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 5
+        },
+        "method": {
+          "const": "code"
+        },
+        "inputs": {
+          "type": "string"
+        }
+      }
+    },
+    "reviewScore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "method",
+        "status"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 5
+        },
+        "method": {
+          "const": "reviewer"
+        },
+        "status": {
+          "enum": [
+            "pending_review",
+            "reviewed"
+          ]
+        },
+        "reviewed": {
+          "$ref": "#/definitions/date"
+        },
+        "reviewer": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.1"
+    },
+    "id": {
+      "$ref": "#/definitions/slug",
+      "description": "Stable identifier; never reused or renamed."
+    },
+    "name": {
+      "$ref": "#/definitions/text"
+    },
+    "family": {
+      "$ref": "#/definitions/text"
+    },
+    "task_types": {
+      "$ref": "#/definitions/textList"
+    },
+    "summary": {
+      "$ref": "#/definitions/text",
+      "description": "One sentence, our own words."
+    },
+    "inputs": {
+      "$ref": "#/definitions/text"
+    },
+    "outputs": {
+      "$ref": "#/definitions/text"
+    },
+    "data_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_types",
+        "min_observations",
+        "frequency",
+        "missing_values"
+      ],
+      "properties": {
+        "data_types": {
+          "$ref": "#/definitions/textList"
+        },
+        "min_observations": {
+          "type": "string"
+        },
+        "frequency": {
+          "type": "string"
+        },
+        "missing_values": {
+          "type": "string"
+        }
+      }
+    },
+    "assumptions": {
+      "$ref": "#/definitions/textList"
+    },
+    "math_summary": {
+      "$ref": "#/definitions/text"
+    },
+    "when_to_use": {
+      "$ref": "#/definitions/textList"
+    },
+    "when_not_to_use": {
+      "$ref": "#/definitions/textList"
+    },
+    "pitfalls": {
+      "$ref": "#/definitions/textList"
+    },
+    "compute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complexity",
+        "hardware"
+      ],
+      "properties": {
+        "complexity": {
+          "type": "string"
+        },
+        "hardware": {
+          "type": "string"
+        }
+      }
+    },
+    "applicability": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domain",
+          "use_case",
+          "sl_datasets"
+        ],
+        "properties": {
+          "domain": {
+            "enum": [
+              "finance",
+              "research"
+            ]
+          },
+          "use_case": {
+            "$ref": "#/definitions/text"
+          },
+          "sl_datasets": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/definitions/slug"
+            }
+          }
+        }
+      }
+    },
+    "materials": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "A small, hand-checked set: key paper(s), 1-2 canonical implementations, one free tutorial or docs page, one worked example on a Signal Lab dataset.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "url",
+          "why",
+          "verification"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+:(paper|implementation|tutorial|worked_example)-[0-9]+$"
+          },
+          "kind": {
+            "enum": [
+              "paper",
+              "implementation",
+              "tutorial",
+              "worked_example"
+            ]
+          },
+          "title": {
+            "$ref": "#/definitions/text"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https://"
+          },
+          "doi": {
+            "type": "string"
+          },
+          "arxiv": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "sl_dataset": {
+            "$ref": "#/definitions/slug"
+          },
+          "domain": {
+            "enum": [
+              "finance",
+              "research"
+            ]
+          },
+          "steps": {
+            "$ref": "#/definitions/textList"
+          },
+          "why": {
+            "$ref": "#/definitions/text",
+            "description": "One line: why this material, in our words."
+          },
+          "verification": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "checked",
+              "method"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "verified",
+                  "no_open_link",
+                  "broken",
+                  "unverified"
+                ]
+              },
+              "checked": {
+                "$ref": "#/definitions/date"
+              },
+              "method": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "benchmark_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "note",
+          "source_url"
+        ],
+        "properties": {
+          "note": {
+            "$ref": "#/definitions/text"
+          },
+          "source_url": {
+            "type": "string",
+            "pattern": "^https://"
+          }
+        }
+      }
+    },
+    "facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "citations",
+        "repos",
+        "abstract_available",
+        "benchmark_cited"
+      ],
+      "description": "Machine-checked inputs to the code scores, each with the date it was checked.",
+      "properties": {
+        "citations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "doi",
+              "openalex_id",
+              "cited_by",
+              "checked"
+            ],
+            "properties": {
+              "doi": {
+                "type": "string"
+              },
+              "openalex_id": {
+                "type": "string"
+              },
+              "cited_by": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checked": {
+                "$ref": "#/definitions/date"
+              }
+            }
+          }
+        },
+        "repos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repo",
+              "last_push",
+              "stars",
+              "archived",
+              "checked"
+            ],
+            "properties": {
+              "repo": {
+                "type": "string",
+                "pattern": "^[^/]+/[^/]+$"
+              },
+              "last_push": {
+                "$ref": "#/definitions/date"
+              },
+              "stars": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "archived": {
+                "type": "boolean"
+              },
+              "checked": {
+                "$ref": "#/definitions/date"
+              }
+            }
+          }
+        },
+        "abstract_available": {
+          "type": "boolean"
+        },
+        "benchmark_cited": {
+          "type": "boolean"
+        }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence",
+        "maturity",
+        "freshness",
+        "theory",
+        "ease",
+        "fit"
+      ],
+      "properties": {
+        "evidence": {
+          "$ref": "#/definitions/codeScore"
+        },
+        "maturity": {
+          "$ref": "#/definitions/codeScore"
+        },
+        "freshness": {
+          "$ref": "#/definitions/codeScore"
+        },
+        "theory": {
+          "$ref": "#/definitions/reviewScore"
+        },
+        "ease": {
+          "$ref": "#/definitions/reviewScore"
+        },
+        "fit": {
+          "$ref": "#/definitions/reviewScore"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "links_checked",
+        "claim_check",
+        "reviewed_by",
+        "format_approved"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pilot",
+            "reviewed",
+            "approved"
+          ]
+        },
+        "links_checked": {
+          "$ref": "#/definitions/date"
+        },
+        "claim_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "verdict",
+            "scope",
+            "checked",
+            "method"
+          ],
+          "properties": {
+            "verdict": {
+              "enum": [
+                "consistent",
+                "partly_unverified",
+                "conflict",
+                "skipped_no_abstract"
+              ]
+            },
+            "scope": {
+              "enum": [
+                "abstract",
+                "full_text"
+              ]
+            },
+            "checked": {
+              "$ref": "#/definitions/date"
+            },
+            "method": {
+              "type": "string"
+            }
+          }
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "format_approved": {
+          "type": "boolean"
+        }
+      }
+    },
+    "license": {
+      "const": "CC-BY-4.0"
+    },
+    "updated": {
+      "$ref": "#/definitions/date"
+    }
+  }
+}

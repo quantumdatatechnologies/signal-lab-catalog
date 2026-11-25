@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.1",
+  "id": "hmm-regime-switching",
+  "name": "Hidden Markov / Markov regime-switching models",
+  "family": "Latent-state time series",
+  "task_types": [
+    "regime detection",
+    "forecasting",
+    "nowcasting"
+  ],
+  "summary": "Assumes the data switch between a few hidden regimes (e.g. expansion and recession) and estimates when.",
+  "inputs": "A univariate or multivariate series; number of regimes.",
+  "outputs": "Regime-specific parameters, transition probabilities, filtered and smoothed regime probabilities.",
+  "data_requirements": {
+    "data_types": [
+      "time series"
+    ],
+    "min_observations": "Long enough to contain several regime switches",
+    "frequency": "Regular (monthly, quarterly, daily)",
+    "missing_values": "Not supported in most implementations; fill or trim"
+  },
+  "assumptions": [
+    "A small number of discrete hidden regimes",
+    "Markov transitions between regimes",
+    "Within-regime model (e.g. Gaussian mean/variance) is adequate"
+  ],
+  "math_summary": "Observations depend on an unobserved discrete state s_t following a Markov chain with transition matrix P; parameters estimated by maximum likelihood via the Hamilton filter or EM (Baum-Welch), giving filtered and smoothed regime probabilities.",
+  "when_to_use": [
+    "Business-cycle or bull/bear regime identification",
+    "Series with apparent switches in mean or volatility"
+  ],
+  "when_not_to_use": [
+    "Many regimes with little data (identification problems)",
+    "When regimes are known and observable"
+  ],
+  "pitfalls": [
+    "Label switching and local optima: use several starts",
+    "hmmlearn has had limited maintenance (last push Oct 2024)"
+  ],
+  "compute": {
+    "complexity": "O(n K^2) per filter pass for K regimes.",
+    "hardware": "CPU."
+  },
+  "applicability": [
+    {
+      "domain": "research",
+      "use_case": "Recession probabilities from GDP or employment growth (Hamilton's original application is US GNP)",
+      "sl_datasets": [
+        "fred",
+        "bls-public-data"
+      ]
+    },
+    {
+      "domain": "finance",
+      "use_case": "Volatility regimes in commodity prices",
+      "sl_datasets": [
+        "world-bank-pink-sheet"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "hmm-regime-switching:paper-1",
+      "kind": "paper",
+      "title": "Hamilton (1989), A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle",
+      "url": "https://doi.org/10.2307/1912559",
+      "doi": "10.2307/1912559",
+      "why": "Brought Markov switching to economics using US GNP.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "hmm-regime-switching:implementation-1",
+      "kind": "implementation",
+      "title": "statsmodels MarkovRegression",
+      "url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.regime_switching.markov_regression.MarkovRegression.html",
+      "why": "Maintained implementation of Hamilton-style switching models; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "hmm-regime-switching:tutorial-1",
+      "kind": "tutorial",
+      "title": "statsmodels: Markov switching dynamic regression models",
+      "url": "https://www.statsmodels.org/stable/examples/notebooks/generated/markov_regression.html",
+      "why": "Worked examples: federal funds rate regimes, a Taylor rule with 2 or 3 regimes, and switching variances.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "hmm-regime-switching:worked_example-1",
+      "kind": "worked_example",
+      "title": "Recession probabilities from US GDP growth",
+      "url": "https://signal-lab.qdt.ai/datasets/fred",
+      "sl_dataset": "fred",
+      "domain": "research",
+      "steps": [
+        "Pull quarterly real GDP and compute growth",
+        "Fit a two-regime switching mean model",
+        "Plot smoothed recession probabilities",
+        "Compare with official recession dates"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.2307/1912559",
+        "openalex_id": "https://openalex.org/W2074812030",
+        "cited_by": 11960,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "statsmodels/statsmodels",
+        "last_push": "2026-11-24",
+        "stars": 11765,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 4,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=11960 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Likelihood-based with the Hamilton filter and smoothed regime probabilities."
+    },
+    "ease": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Local optima, choice of regime count and label switching need several starts and judgement."
+    },
+    "fit": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Business-cycle and volatility regimes are a direct match for finance and macro research."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.1",
+  "id": "isolation-forest",
+  "name": "Isolation forest",
+  "family": "Anomaly detection",
+  "task_types": [
+    "unsupervised anomaly detection"
+  ],
+  "summary": "Flags anomalies as points that random splits isolate quickly; fast and unsupervised.",
+  "inputs": "Tabular features (no labels).",
+  "outputs": "Anomaly score per row and a binary flag at a chosen contamination rate.",
+  "data_requirements": {
+    "data_types": [
+      "tabular"
+    ],
+    "min_observations": "Hundreds of rows",
+    "frequency": "Not time-aware",
+    "missing_values": "Impute first"
+  },
+  "assumptions": [
+    "Anomalies are few and different, so they are isolated by fewer random splits",
+    "Features are on meaningful scales; axis-parallel splits"
+  ],
+  "math_summary": "Builds random trees by picking a random feature and random split value; anomaly score is based on the average path length needed to isolate a point, normalised by the expected path length for n points.",
+  "when_to_use": [
+    "Large unlabelled tabular data",
+    "Fast first-pass screening for unusual records"
+  ],
+  "when_not_to_use": [
+    "Anomalies defined by context or sequence (use residual-based methods)",
+    "When you have labels (use supervised models)"
+  ],
+  "pitfalls": [
+    "Contamination parameter sets the threshold arbitrarily",
+    "Weak on high-dimensional data with many irrelevant features"
+  ],
+  "compute": {
+    "complexity": "Linear time, O(n_trees * psi log psi) with sub-sample size psi; low memory.",
+    "hardware": "CPU, very cheap."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Flagging unusual government spending transactions",
+      "sl_datasets": [
+        "us-treasury-fiscal-data"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Data-quality screening of statistical releases before modelling",
+      "sl_datasets": [
+        "world-bank",
+        "sec-edgar-apis"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "isolation-forest:paper-1",
+      "kind": "paper",
+      "title": "Liu, Ting & Zhou (2008), Isolation Forest (IEEE ICDM)",
+      "url": "https://doi.org/10.1109/ICDM.2008.17",
+      "doi": "10.1109/ICDM.2008.17",
+      "why": "Original algorithm and its linear-time argument.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "isolation-forest:implementation-1",
+      "kind": "implementation",
+      "title": "scikit-learn IsolationForest",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html",
+      "why": "Reference implementation; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "isolation-forest:tutorial-1",
+      "kind": "tutorial",
+      "title": "scikit-learn user guide: Novelty and Outlier Detection",
+      "url": "https://scikit-learn.org/stable/modules/outlier_detection.html",
+      "why": "Compares isolation forest with other detectors on the same data.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "isolation-forest:worked_example-1",
+      "kind": "worked_example",
+      "title": "Screen XBRL company facts for likely unit or scale errors",
+      "url": "https://signal-lab.qdt.ai/datasets/sec-edgar-apis",
+      "sl_dataset": "sec-edgar-apis",
+      "domain": "research",
+      "steps": [
+        "Pull company facts for one concept across filers",
+        "Build ratio features (e.g. revenue per asset)",
+        "Score with isolation forest",
+        "Hand-check the top 20 flags before drawing conclusions"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1109/ICDM.2008.17",
+        "openalex_id": "https://openalex.org/W2296719434",
+        "cited_by": 10515,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "scikit-learn/scikit-learn",
+        "last_push": "2026-11-24",
+        "stars": 68316,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 4,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=10515 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Clear intuition (anomalies isolate in fewer splits) and a linear-time argument; little theory on what kinds of anomaly it finds."
+    },
+    "ease": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "One call in scikit-learn, CPU, very cheap."
+    },
+    "fit": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Good for screening data-quality issues; misses contextual or sequential anomalies common in time series."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

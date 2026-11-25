@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.1",
+  "id": "prophet",
+  "name": "Prophet",
+  "family": "Decomposable additive forecasting",
+  "task_types": [
+    "univariate forecasting",
+    "business time series"
+  ],
+  "summary": "An additive forecasting model (trend + seasonality + holidays) designed for quick, tunable business forecasts.",
+  "inputs": "A dated series (ds, y); optional holidays and extra regressors.",
+  "outputs": "Forecasts with uncertainty intervals and component plots.",
+  "data_requirements": {
+    "data_types": [
+      "univariate time series"
+    ],
+    "min_observations": "At least one full seasonal cycle, ideally several",
+    "frequency": "Daily or sub-daily works best",
+    "missing_values": "Tolerated"
+  },
+  "assumptions": [
+    "Series = trend + seasonalities + holidays + noise",
+    "Daily or sub-daily business data with strong calendar effects"
+  ],
+  "math_summary": "y(t) = g(t) + s(t) + h(t) + e_t: piecewise linear or logistic trend with changepoints, Fourier-series seasonalities and holiday indicators, fitted with Stan (MAP by default).",
+  "when_to_use": [
+    "Many business series needing a quick, tunable baseline by analysts",
+    "Strong weekly/yearly seasonality and holidays"
+  ],
+  "when_not_to_use": [
+    "Financial returns or prices (little seasonality; poor fit)",
+    "When a well-tuned ARIMA/ETS or boosting baseline is available and accuracy matters"
+  ],
+  "pitfalls": [
+    "Default changepoint settings can over- or under-fit trend",
+    "Should be compared against simple baselines"
+  ],
+  "compute": {
+    "complexity": "Fast MAP fit per series; full MCMC optional and slower.",
+    "hardware": "CPU."
+  },
+  "applicability": [
+    {
+      "domain": "research",
+      "use_case": "Daily electricity demand with weekly and yearly seasonality and holidays",
+      "sl_datasets": [
+        "smard-electricity-market-data",
+        "energy-charts-api"
+      ]
+    },
+    {
+      "domain": "finance",
+      "use_case": "Forecasting daily Treasury cash balances with calendar effects",
+      "sl_datasets": [
+        "us-treasury-fiscal-data"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "prophet:paper-1",
+      "kind": "paper",
+      "title": "Taylor & Letham (2018), Forecasting at Scale (The American Statistician)",
+      "url": "https://doi.org/10.1080/00031305.2017.1380080",
+      "doi": "10.1080/00031305.2017.1380080",
+      "why": "The model and the analyst-in-the-loop workflow it was built for.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "prophet:implementation-1",
+      "kind": "implementation",
+      "title": "Prophet (GitHub)",
+      "url": "https://github.com/meta/prophet",
+      "why": "Official Python and R package; MIT.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "prophet:tutorial-1",
+      "kind": "tutorial",
+      "title": "Prophet Quick Start",
+      "url": "https://meta.github.io/prophet/docs/quick_start.html",
+      "why": "Official minimal example in both Python and R.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "prophet:worked_example-1",
+      "kind": "worked_example",
+      "title": "Daily electricity demand with weekly and yearly seasonality",
+      "url": "https://signal-lab.qdt.ai/datasets/smard-electricity-market-data",
+      "sl_dataset": "smard-electricity-market-data",
+      "domain": "research",
+      "steps": [
+        "Pull daily German load (CC BY 4.0)",
+        "Add German public holidays",
+        "Fit Prophet and a seasonal-naive baseline",
+        "Compare errors over a full year hold-out"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1080/00031305.2017.1380080",
+        "openalex_id": "https://openalex.org/W2747599906",
+        "cited_by": 4308,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "meta/prophet",
+        "last_push": "2026-11-24",
+        "stars": 20500,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 3,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=4308 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 2,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "A curve-fitting model (trend, seasonality, holidays) with no autoregressive dynamics; intervals rest on trend-uncertainty heuristics."
+    },
+    "ease": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Very easy to run in Python or R with readable components."
+    },
+    "fit": {
+      "value": 2,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Weak fit for financial series with little seasonality; reasonable only for calendar-driven demand data."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "partly_unverified",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

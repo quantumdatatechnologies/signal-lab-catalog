@@ -1,0 +1,199 @@
+{
+  "schema_version": "1.1",
+  "id": "random-forest",
+  "name": "Random forest",
+  "family": "Ensemble / bagged trees",
+  "task_types": [
+    "regression",
+    "classification",
+    "feature importance"
+  ],
+  "summary": "Averages many decorrelated decision trees trained on bootstrap samples; a robust, low-tuning baseline.",
+  "inputs": "Tabular features and a target.",
+  "outputs": "Predictions or probabilities; out-of-bag error; feature importances.",
+  "data_requirements": {
+    "data_types": [
+      "tabular"
+    ],
+    "min_observations": "Hundreds of rows",
+    "frequency": "Any; no extrapolation beyond training range",
+    "missing_values": "Impute first (implementation dependent)"
+  },
+  "assumptions": [
+    "i.i.d. rows for out-of-bag error to be meaningful",
+    "Cannot extrapolate beyond the range of training targets"
+  ],
+  "math_summary": "Averages many decorrelated decision trees, each grown on a bootstrap sample with a random subset of features considered at each split; generalisation error depends on tree strength and correlation between trees.",
+  "when_to_use": [
+    "Robust baseline with little tuning",
+    "Feature screening on wide tabular data",
+    "Noisy data where boosting overfits"
+  ],
+  "when_not_to_use": [
+    "Trending targets that need extrapolation (prices, cumulative series)",
+    "When top accuracy matters more than robustness (boosting usually wins on tabular benchmarks, check per case)"
+  ],
+  "pitfalls": [
+    "Impurity-based importance is biased toward high-cardinality features",
+    "Out-of-bag error is optimistic on autocorrelated data"
+  ],
+  "compute": {
+    "complexity": "O(n_trees * n log n * m_try); embarrassingly parallel.",
+    "hardware": "CPU only, any laptop to cluster."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Screening which macro indicators help explain sovereign yield moves",
+      "sl_datasets": [
+        "japan-mof-jgb-interest-rates",
+        "fred"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Explaining regional electricity consumption from weather and economic features",
+      "sl_datasets": [
+        "smard-electricity-market-data",
+        "energy-charts-api"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "random-forest:paper-1",
+      "kind": "paper",
+      "title": "Breiman (2001), Random Forests (Machine Learning 45)",
+      "url": "https://doi.org/10.1023/A:1010933404324",
+      "doi": "10.1023/A:1010933404324",
+      "why": "The founding paper, including the strength-correlation view of generalisation.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "random-forest:implementation-1",
+      "kind": "implementation",
+      "title": "scikit-learn RandomForestRegressor",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html",
+      "why": "Reference implementation with out-of-bag scoring; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "random-forest:tutorial-1",
+      "kind": "tutorial",
+      "title": "scikit-learn user guide: Ensembles (random forests section)",
+      "url": "https://scikit-learn.org/stable/modules/ensemble.html",
+      "why": "Explains bagging, feature subsampling and importance caveats.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "random-forest:worked_example-1",
+      "kind": "worked_example",
+      "title": "Screen which macro variables move Japanese government bond yields",
+      "url": "https://signal-lab.qdt.ai/datasets/japan-mof-jgb-interest-rates",
+      "sl_dataset": "japan-mof-jgb-interest-rates",
+      "domain": "finance",
+      "steps": [
+        "Use daily JGB yields by maturity as targets (monthly changes)",
+        "Add candidate drivers from FRED",
+        "Fit a forest and use permutation importance on a later hold-out period",
+        "Treat results as screening, not causal evidence"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1023/A:1010933404324",
+        "openalex_id": "https://openalex.org/W2911964244",
+        "cited_by": 171419,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "scikit-learn/scikit-learn",
+        "last_push": "2026-11-24",
+        "stars": 68316,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": false,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 3,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=false"
+    },
+    "maturity": {
+      "value": 5,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=171419 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Breiman's strength-correlation bound and later consistency results; theory is partial for the practical algorithm."
+    },
+    "ease": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Few hyperparameters, robust defaults, CPU-only."
+    },
+    "fit": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Good robust baseline, but it cannot extrapolate trending levels such as prices or cumulative series."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "skipped_no_abstract",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

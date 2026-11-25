@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.1",
+  "id": "xgboost",
+  "name": "XGBoost",
+  "family": "Ensemble / boosted trees",
+  "task_types": [
+    "regression",
+    "classification",
+    "ranking"
+  ],
+  "summary": "A regularised, highly optimised gradient-boosted tree library and algorithm for large tabular problems.",
+  "inputs": "Tabular features (dense or sparse) and a target; optional sample weights.",
+  "outputs": "Predictions or probabilities; SHAP-compatible tree structure.",
+  "data_requirements": {
+    "data_types": [
+      "tabular",
+      "sparse"
+    ],
+    "min_observations": "Thousands of rows preferred",
+    "frequency": "Any; time-aware splits for time series",
+    "missing_values": "Learned default split direction"
+  },
+  "assumptions": [
+    "Same as gradient boosting: tabular features, i.i.d. rows unless splits are time-aware"
+  ],
+  "math_summary": "Regularised gradient boosting: second-order (gradient and Hessian) approximation of the loss with L1/L2 penalties on leaf weights, plus a sparsity-aware split-finding algorithm and a weighted quantile sketch for approximate splits.",
+  "when_to_use": [
+    "Large sparse tabular data",
+    "When you need a fast, mature boosted-tree library with GPU and distributed options"
+  ],
+  "when_not_to_use": [
+    "When a simpler model is needed for regulatory explainability",
+    "Raw sequences, images or text without features"
+  ],
+  "pitfalls": [
+    "Many hyperparameters: tune with time-aware CV",
+    "Feature importance (gain) can mislead; prefer SHAP or permutation importance"
+  ],
+  "compute": {
+    "complexity": "Approximately O(n_trees * nnz * log n) with pre-sorted/hist methods; scales to billions of rows distributed.",
+    "hardware": "CPU fine; optional GPU (CUDA) acceleration."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Predicting next-period earnings surprises from fundamentals and filings metadata",
+      "sl_datasets": [
+        "sec-edgar-apis",
+        "simfin"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Classifying commodity price regimes from macro drivers",
+      "sl_datasets": [
+        "world-bank-pink-sheet",
+        "fred"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "xgboost:paper-1",
+      "kind": "paper",
+      "title": "Chen & Guestrin (2016), XGBoost: A Scalable Tree Boosting System (KDD)",
+      "url": "https://doi.org/10.1145/2939672.2939785",
+      "doi": "10.1145/2939672.2939785",
+      "why": "Describes the regularised objective and the sparsity-aware split finding that set the library apart.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "xgboost:implementation-1",
+      "kind": "implementation",
+      "title": "XGBoost official documentation",
+      "url": "https://xgboost.readthedocs.io/en/stable/",
+      "why": "The canonical implementation with Python, R and JVM bindings; Apache-2.0.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "xgboost:tutorial-1",
+      "kind": "tutorial",
+      "title": "XGBoost: Introduction to Boosted Trees",
+      "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html",
+      "why": "The maintainers' own walk-through of the objective and regularisation, in plain terms.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "xgboost:worked_example-1",
+      "kind": "worked_example",
+      "title": "Classify month-ahead commodity price direction from macro drivers",
+      "url": "https://signal-lab.qdt.ai/datasets/world-bank-pink-sheet",
+      "sl_dataset": "world-bank-pink-sheet",
+      "domain": "finance",
+      "steps": [
+        "Take monthly commodity prices (CC BY 4.0) as targets",
+        "Add macro drivers from FRED aligned to publication dates",
+        "Fit with time-ordered cross-validation",
+        "Report hit rate against an always-up baseline"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1145/2939672.2939785",
+        "openalex_id": "https://openalex.org/W2295598076",
+        "cited_by": 78704,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "dmlc/xgboost",
+        "last_push": "2026-11-24",
+        "stars": 29012,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 5,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=78704 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Same foundation as gradient boosting plus a regularised second-order objective; a systems paper, not new statistical guarantees."
+    },
+    "ease": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Many interacting hyperparameters; tuning with time-aware CV is real work."
+    },
+    "fit": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Same tabular strengths as gradient boosting for fundamentals and macro drivers."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

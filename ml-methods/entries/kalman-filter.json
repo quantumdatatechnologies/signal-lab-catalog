@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.1",
+  "id": "kalman-filter",
+  "name": "Kalman filter / state-space models",
+  "family": "State-space / Bayesian filtering",
+  "task_types": [
+    "filtering",
+    "smoothing",
+    "forecasting",
+    "missing data"
+  ],
+  "summary": "Recursively estimates a hidden state (trend, level, time-varying coefficient) from noisy observations.",
+  "inputs": "Observed series plus a state-space specification (transition, observation, noise covariances).",
+  "outputs": "Filtered and smoothed state estimates with uncertainty; forecasts; likelihood.",
+  "data_requirements": {
+    "data_types": [
+      "univariate or multivariate time series"
+    ],
+    "min_observations": "Tens of points for simple local-level models",
+    "frequency": "Regular; gaps allowed",
+    "missing_values": "Handled natively (skip the update step)"
+  },
+  "assumptions": [
+    "Linear state transition and observation equations",
+    "Gaussian noise (optimal under these; otherwise best linear estimator)",
+    "Known or estimated noise covariances"
+  ],
+  "math_summary": "Recursive predict-update: x_t = F x_{t-1} + w_t, y_t = H x_t + v_t. The filter propagates the state mean and covariance and corrects with the Kalman gain K = P H'(H P H' + R)^-1.",
+  "when_to_use": [
+    "Noisy or irregular series with a latent signal (trend, level, beta)",
+    "Time-varying regression coefficients",
+    "Handling missing observations naturally"
+  ],
+  "when_not_to_use": [
+    "Strongly non-linear dynamics (use extended/unscented or particle filters)",
+    "Heavy-tailed noise without robust variants"
+  ],
+  "pitfalls": [
+    "Poorly identified noise variances",
+    "Initialisation of the state covariance"
+  ],
+  "compute": {
+    "complexity": "O(n * k^3) for state dimension k.",
+    "hardware": "CPU, trivial for small k."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Time-varying beta or hedge ratio between two price series",
+      "sl_datasets": [
+        "fred",
+        "world-bank-pink-sheet"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Extracting a smooth trend from noisy monthly indicators with gaps",
+      "sl_datasets": [
+        "bls-public-data",
+        "world-bank"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "kalman-filter:paper-1",
+      "kind": "paper",
+      "title": "Kalman (1960), A New Approach to Linear Filtering and Prediction Problems",
+      "url": "https://doi.org/10.1115/1.3662552",
+      "doi": "10.1115/1.3662552",
+      "why": "The original recursive filter derivation.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "kalman-filter:implementation-1",
+      "kind": "implementation",
+      "title": "statsmodels state space models",
+      "url": "https://www.statsmodels.org/stable/statespace.html",
+      "why": "Maintained, general state-space framework with Kalman filtering and smoothing; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "kalman-filter:tutorial-1",
+      "kind": "tutorial",
+      "title": "statsmodels: Local Linear Trends",
+      "url": "https://www.statsmodels.org/stable/examples/notebooks/generated/statespace_local_linear_trend.html",
+      "why": "Shows how to write a custom state-space model and read filtered states.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "kalman-filter:worked_example-1",
+      "kind": "worked_example",
+      "title": "Extract a smooth trend from noisy monthly labour data with gaps",
+      "url": "https://signal-lab.qdt.ai/datasets/bls-public-data",
+      "sl_dataset": "bls-public-data",
+      "domain": "research",
+      "steps": [
+        "Pull a monthly BLS series",
+        "Fit a local linear trend (UnobservedComponents)",
+        "Plot smoothed trend with bands",
+        "Compare with a centred moving average"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1115/1.3662552",
+        "openalex_id": "https://openalex.org/W2105934661",
+        "cited_by": 40544,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "statsmodels/statsmodels",
+        "last_push": "2026-11-24",
+        "stars": 11765,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 5,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=40544 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Optimal linear filter under Gaussian assumptions (Kalman 1960), with exact likelihoods."
+    },
+    "ease": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Specifying a state-space model and its noise variances takes skill; identification can be tricky."
+    },
+    "fit": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Useful for latent trends, time-varying betas and gappy series; needs a sensible model to pay off."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

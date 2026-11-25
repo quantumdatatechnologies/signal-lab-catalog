@@ -1,0 +1,211 @@
+{
+  "schema_version": "1.1",
+  "id": "conformal-prediction",
+  "name": "Conformal prediction",
+  "family": "Uncertainty quantification (distribution-free)",
+  "task_types": [
+    "prediction intervals",
+    "prediction sets"
+  ],
+  "summary": "Wraps any model to produce prediction intervals or sets with a stated coverage guarantee.",
+  "inputs": "A fitted model plus a held-out calibration set.",
+  "outputs": "Intervals (regression) or prediction sets (classification) at a chosen coverage level.",
+  "data_requirements": {
+    "data_types": [
+      "tabular",
+      "time series (with dedicated variants)"
+    ],
+    "min_observations": "A calibration set of a few hundred points",
+    "frequency": "Any; exchangeability needed for the basic guarantee",
+    "missing_values": "As the base model"
+  },
+  "assumptions": [
+    "Exchangeability of calibration and test data for the standard finite-sample guarantee",
+    "Time-series variants relax this with weaker or approximate guarantees"
+  ],
+  "math_summary": "Wrap any model: compute non-conformity scores (e.g. absolute residuals) on held-out calibration data and take the ceil((n+1)(1-alpha))/n empirical quantile; intervals then have marginal coverage of at least 1-alpha under exchangeability.",
+  "when_to_use": [
+    "Adding honest prediction intervals to any point forecaster or classifier",
+    "Risk reporting where coverage must be stated"
+  ],
+  "when_not_to_use": [
+    "Expecting conditional (per-case) coverage from the basic method",
+    "Strongly non-exchangeable data without a time-series variant"
+  ],
+  "pitfalls": [
+    "Marginal, not conditional, coverage",
+    "Calibration set must not be used for training"
+  ],
+  "compute": {
+    "complexity": "Split conformal adds one pass over calibration data; full conformal is far costlier.",
+    "hardware": "CPU, negligible overhead for split conformal."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Coverage-checked intervals for macro or revenue forecasts",
+      "sl_datasets": [
+        "fred",
+        "us-treasury-fiscal-data"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Intervals for electricity price forecasts (time-series conformal)",
+      "sl_datasets": [
+        "nz-emi-wholesale-datasets"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "conformal-prediction:paper-1",
+      "kind": "paper",
+      "title": "Lei, G'Sell, Rinaldo, Tibshirani & Wasserman (2018), Distribution-Free Predictive Inference for Regression (JASA)",
+      "url": "https://doi.org/10.1080/01621459.2017.1307116",
+      "doi": "10.1080/01621459.2017.1307116",
+      "why": "Peer-reviewed treatment of split conformal for regression with guarantees.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "conformal-prediction:paper-2",
+      "kind": "paper",
+      "title": "Xu & Xie (2020), Conformal prediction for time series",
+      "url": "https://arxiv.org/abs/2010.09107",
+      "arxiv": "2010.09107",
+      "why": "A time-series variant (EnbPI) for data that are not exchangeable.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "conformal-prediction:implementation-1",
+      "kind": "implementation",
+      "title": "MAPIE",
+      "url": "https://mapie.readthedocs.io/en/stable/",
+      "why": "scikit-learn-compatible conformal library; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "conformal-prediction:tutorial-1",
+      "kind": "tutorial",
+      "title": "Angelopoulos & Bates, A Gentle Introduction to Conformal Prediction",
+      "url": "https://arxiv.org/abs/2107.07511",
+      "arxiv": "2107.07511",
+      "why": "Free, practical tutorial with code-level recipes.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "conformal-prediction:worked_example-1",
+      "kind": "worked_example",
+      "title": "Coverage-checked intervals for monthly federal outlays",
+      "url": "https://signal-lab.qdt.ai/datasets/us-treasury-fiscal-data",
+      "sl_dataset": "us-treasury-fiscal-data",
+      "domain": "finance",
+      "steps": [
+        "Fit any point forecaster to monthly outlays",
+        "Hold out a calibration window",
+        "Build split-conformal intervals at 90%",
+        "Report realised coverage on later months"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [],
+  "facts": {
+    "citations": [
+      {
+        "doi": "10.1080/01621459.2017.1307116",
+        "openalex_id": "https://openalex.org/W2964060211",
+        "cited_by": 2191,
+        "checked": "2026-11-24"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "scikit-learn-contrib/MAPIE",
+        "last_push": "2026-11-19",
+        "stars": 1697,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": true,
+    "benchmark_cited": false
+  },
+  "scores": {
+    "evidence": {
+      "value": 4,
+      "method": "code",
+      "inputs": "doi=true implementation=true benchmark=false open_abstract=true"
+    },
+    "maturity": {
+      "value": 3,
+      "method": "code",
+      "inputs": "max OpenAlex cited_by=2191 (>=20000:5, >=5000:4, >=1000:3, >=200:2, else 1)"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=5 worst=5"
+    },
+    "theory": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Finite-sample marginal coverage guarantee under exchangeability (Lei et al. 2018)."
+    },
+    "ease": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Split conformal is simple with MAPIE; time-series variants need more care."
+    },
+    "fit": {
+      "value": 3,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Time series break exchangeability, so guarantees for finance forecasts are approximate."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "consistent",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}

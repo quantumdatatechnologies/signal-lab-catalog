@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.1",
+  "id": "arima-sarima",
+  "name": "ARIMA / SARIMA",
+  "family": "Classical time series",
+  "task_types": [
+    "univariate forecasting"
+  ],
+  "summary": "Models a single time series from its own past values and past forecast errors, with optional seasonal terms.",
+  "inputs": "One regularly spaced univariate series; optional exogenous regressors (SARIMAX).",
+  "outputs": "Point forecasts with prediction intervals; fitted parameters and residual diagnostics.",
+  "data_requirements": {
+    "data_types": [
+      "univariate time series"
+    ],
+    "min_observations": "About 50+ points; several seasonal cycles for SARIMA",
+    "frequency": "Regular (daily, monthly, quarterly)",
+    "missing_values": "Handled by the state-space likelihood in statsmodels"
+  },
+  "assumptions": [
+    "Series is stationary after differencing (d, D)",
+    "Linear dependence on past values and past errors",
+    "Constant error variance (otherwise pair with GARCH)"
+  ],
+  "math_summary": "phi(B)Phi(B^s)(1-B)^d(1-B^s)^D y_t = theta(B)Theta(B^s) e_t: autoregressive and moving-average polynomials in the backshift operator B, with optional seasonal terms of period s.",
+  "when_to_use": [
+    "Single series with clear autocorrelation and seasonality",
+    "Short to medium histories where deep models overfit",
+    "Transparent, well-understood baseline"
+  ],
+  "when_not_to_use": [
+    "Many related series that benefit from shared learning",
+    "Strong non-linearity or regime changes",
+    "Multiple seasonalities (e.g. hourly electricity) without extra structure"
+  ],
+  "pitfalls": [
+    "Over-differencing",
+    "Choosing orders by in-sample fit only; compare with out-of-sample errors"
+  ],
+  "compute": {
+    "complexity": "Fitting via Kalman-filter likelihood, roughly O(n * state_dim^2) per iteration.",
+    "hardware": "CPU, milliseconds to seconds per series."
+  },
+  "applicability": [
+    {
+      "domain": "finance",
+      "use_case": "Forecasting monthly federal receipts or outlays",
+      "sl_datasets": [
+        "us-treasury-fiscal-data"
+      ]
+    },
+    {
+      "domain": "research",
+      "use_case": "Seasonal forecasting of monthly employment or price indices",
+      "sl_datasets": [
+        "bls-public-data",
+        "fred"
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "id": "arima-sarima:paper-1",
+      "kind": "paper",
+      "title": "Box & Jenkins (1970), Time Series Analysis: Forecasting and Control (book)",
+      "url": null,
+      "why": "The original methodology; a book with no open link, so the textbook below is the practical entry point.",
+      "verification": {
+        "status": "no_open_link",
+        "checked": "2026-11-24",
+        "method": "Book with no open link; cited for provenance only"
+      }
+    },
+    {
+      "id": "arima-sarima:implementation-1",
+      "kind": "implementation",
+      "title": "statsmodels SARIMAX",
+      "url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html",
+      "why": "Maintained state-space implementation with exogenous regressors; BSD-3.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      },
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "arima-sarima:tutorial-1",
+      "kind": "tutorial",
+      "title": "Hyndman & Athanasopoulos, Forecasting: Principles and Practice, ch. 9",
+      "url": "https://otexts.com/fpp3/arima.html",
+      "why": "Free, rigorous textbook chapter on identification, estimation and forecasting with ARIMA.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "HTTP 200 and page title checked, then read by a reviewer"
+      }
+    },
+    {
+      "id": "arima-sarima:worked_example-1",
+      "kind": "worked_example",
+      "title": "Forecast monthly US federal receipts with seasonal ARIMA",
+      "url": "https://signal-lab.qdt.ai/datasets/us-treasury-fiscal-data",
+      "sl_dataset": "us-treasury-fiscal-data",
+      "domain": "finance",
+      "steps": [
+        "Pull monthly receipts from the Monthly Treasury Statement",
+        "Log-transform and choose seasonal differencing",
+        "Select orders by out-of-sample error over rolling origins",
+        "Report intervals, not just point forecasts"
+      ],
+      "why": "Shows the method on an open dataset from the Signal Lab catalog, with a baseline to beat.",
+      "verification": {
+        "status": "verified",
+        "checked": "2026-11-24",
+        "method": "Dataset page returned HTTP 200; steps are a plan, not yet a tested notebook"
+      }
+    }
+  ],
+  "benchmark_notes": [
+    {
+      "note": "Statistical methods including ARIMA-family were among the 61 methods compared on 100,000 series; read the paper for relative accuracy.",
+      "source_url": "https://doi.org/10.1016/j.ijforecast.2019.04.014"
+    }
+  ],
+  "facts": {
+    "citations": [],
+    "repos": [
+      {
+        "repo": "statsmodels/statsmodels",
+        "last_push": "2026-11-24",
+        "stars": 11765,
+        "archived": false,
+        "checked": "2026-11-24"
+      }
+    ],
+    "abstract_available": false,
+    "benchmark_cited": true
+  },
+  "scores": {
+    "evidence": {
+      "value": 3,
+      "method": "code",
+      "inputs": "doi=false implementation=true benchmark=true open_abstract=false"
+    },
+    "maturity": {
+      "value": null,
+      "method": "code",
+      "inputs": "no OpenAlex record for any key paper"
+    },
+    "freshness": {
+      "value": 5,
+      "method": "code",
+      "inputs": "days since last push: best=0 worst=0"
+    },
+    "theory": {
+      "value": 5,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Well-established likelihood theory, identification and interval forecasts under stated assumptions."
+    },
+    "ease": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "Standard libraries; order selection and differencing need judgement."
+    },
+    "fit": {
+      "value": 4,
+      "method": "reviewer",
+      "status": "reviewed",
+      "reviewer": "Alza (Signal Lab)",
+      "reviewed": "2026-11-24",
+      "rationale": "A core baseline for monthly macro and fiscal series; little to offer for return prediction."
+    }
+  },
+  "verification": {
+    "status": "reviewed",
+    "links_checked": "2026-11-24",
+    "claim_check": {
+      "verdict": "skipped_no_abstract",
+      "scope": "abstract",
+      "checked": "2026-11-24",
+      "method": "Automated comparison of this entry's claims with the key paper's abstract by an open-weight LLM. A check, not proof."
+    },
+    "reviewed_by": "Alza (Signal Lab)",
+    "format_approved": false
+  },
+  "license": "CC-BY-4.0",
+  "updated": "2026-11-24"
+}
