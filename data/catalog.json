@@ -2,7 +2,7 @@
  "meta": {
   "source": "https://signal-lab.qdt.ai/api/mcp",
   "tool": "export_catalog",
-  "generated": "2026-11-25T05:05:22.799Z",
+  "generated": "2026-11-25T16:17:14.565Z",
   "count": 1860,
   "notice": "Information presented for educational purposes only. Free tiers, limits, and licenses belong to the providers and may change. Users must verify and follow each provider's terms.",
   "licence": "CC BY 4.0 for the compilation; each source keeps its own licence (see licence columns)"
@@ -28938,8 +28938,8 @@
    "domain": "Financial",
    "type": "Dataset",
    "description": "Curated catalog of financial, economic and alternative data products from 21 listed publishers, 14 of them Nasdaq-branded (others include Quandl, Sharadar, CB Insights and MAREX). Nasdaq says it \"offers both free and premium data\", but all 206 products in its catalog search were labeled Premium on Oct 20, 2026; most premium feeds include free sample data. Alternative data is licensed to institutions only. Coverage, history and update frequency vary by product; check each product page.",
-   "free_tier_limits": "Free account + API key: 300 calls/10 seconds, 2,000 calls/10 minutes, 50,000 calls/day, 1 concurrent call; Tables API returns up to 10,000 rows per call. Free data is mainly sample data from premium products: all 206 catalog products were labeled Premium on Oct 20, 2026.",
-   "rate_limits": "Free account + API key: 300 calls/10 seconds, 2,000 calls/10 minutes, 50,000 calls/day, 1 concurrent call; Tables API returns up to 10,000 rows per call",
+   "free_tier_limits": "A free account is offered, but its limits are not stated on the live provider pages checked November 24, 2026. On October 20, 2026, all 206 catalog products were labeled Premium.",
+   "rate_limits": "A valid API key is required. Nasdaq does not state API rate limits on the live provider pages checked November 24, 2026; the three pages previously cited for limits return 404.",
    "docs_url": "https://data.nasdaq.com",
    "signal_lab_url": "https://signal-lab.qdt.ai/datasets/quandl",
    "tasks": "alt-data; market-data; macro",
